@@ -14,11 +14,11 @@ React/Vite 工作室及 loopback Node API，真实 Dashboard、拖拽/批量文�
 
 ## Phase 4：发布、校验与备份
 
-公开数据投影、文件/元数据检查、公开快照 schema 校验、凭据/路径模式扫描、生产构建和产物审计、发布摘要、单独的提交推送确认、失败重试。实际 Git 推送测试仅对临时本地 bare 仓库运行，覆盖失败后提交保留与非 fast-forward 不覆盖。
+公开数据投影、文件/元数据检查、公开快照 schema 校验、凭据/路径模式扫描、生产构建和产物审计、发布摘要、单独的提交推送确认、失败重试。Git 错误场景在临时本地 bare 仓库中测试，覆盖失败后提交保留与 non-fast-forward 不覆盖；用户确认后，真实后台 Publish 流程已完成 GitHub 提交与推送。
 
 自动元数据备份、完整 tar.gz 导出、备份选择与确认恢复、v1→v2 迁移。独立 GitHub Actions 工作流只上传公开站。
 
-**待用户确认后执行：** 创建远程 `CastorRise/gallery`、配置该仓库 Pages 为 Actions、实际 Git Push 和 GitHub Actions 部署。未将本地构建成功写成线上部署成功。
+**远程阶段已完成：** 用户确认后创建 `CastorRise/gallery`，启用 Actions Pages；真实后台提交和推送成功，GitHub Actions 的 build/deploy 均成功，线上页面及交互已验证。具体证据见 `deployment.json`。
 
 ## Phase 5：质量与文档
 

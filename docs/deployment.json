@@ -1,0 +1,58 @@
+{
+  "repository": "CastorRise/gallery",
+  "url": "https://castorrise.github.io/gallery/",
+  "pagesBuildType": "workflow",
+  "initialReleaseCommit": "93da4fde2f26328a8f7d58e3ceb780f94a6921a4",
+  "initialActionsRun": "https://github.com/CastorRise/gallery/actions/runs/38543665701",
+  "actionsResult": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "verifiedAt": "2026-10-14T09:40:29.969Z",
+  "httpChecks": [
+    {
+      "path": "home",
+      "status": 200
+    },
+    {
+      "path": "photos/14f56d72-5c9d-4054-aad4-e4917fe7a827/",
+      "status": 200
+    },
+    {
+      "path": "collections/",
+      "status": 200
+    },
+    {
+      "path": "journal/",
+      "status": 200
+    },
+    {
+      "path": "about/",
+      "status": 200
+    },
+    {
+      "path": ".local/library.json",
+      "status": 404
+    },
+    {
+      "path": "api/library",
+      "status": 404
+    },
+    {
+      "path": "admin/",
+      "status": 404
+    }
+  ],
+  "browserChecks": {
+    "galleryFilter": 5,
+    "mapMarkers": 3,
+    "detailRefresh": true,
+    "lightbox": true,
+    "pageErrors": []
+  },
+  "publishedPhotos": 14,
+  "collections": 3,
+  "publicImageVariants": 53,
+  "privateDataTracked": false,
+  "existingPersonalSiteChanged": false
+}

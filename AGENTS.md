@@ -45,3 +45,5 @@
 - `npm run build` is for the owner's local export plus build. Do not run it on a fresh CI checkout without `.local`.
 - Push only to verified HTTPS origin `https://github.com/CastorRise/gallery.git` on `main`; preserve failed local commits for retry.
 - No online admin, originals, draft metadata, backup archives or local filesystem paths in the public build.
+
+- Initial production release evidence is recorded in `docs/deployment.json`; refresh deployment status using GitHub Actions and live HTTP/browser checks before claiming a later release.

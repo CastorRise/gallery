@@ -93,13 +93,9 @@ Settings 编辑网站名称、宣言、首页封面、介绍、理念、设备�
 
 后台 Publish 的“构建与预览变更”执行内容校验、图片存在与尺寸检查、GPS/元数据检查、凭据和路径模式扫描、公开快照生成、Astro 生产构建和构建隔离审计，显示照片/专题/故事的新增、修改、移除，以及分类、设置变化和 Git 状态。摘要以 origin/main 的公开快照为基线，首次未推送时显示全部新增；重复预览不会重置待发布数量。这一步不会推送。
 
-远程发布需要先由用户确认创建独立仓库。首次由维护者在确认之后执行：
+独立公开仓库 [CastorRise/gallery](https://github.com/CastorRise/gallery) 已创建，网站 [CastorRise Gallery](https://castorrise.github.io/gallery/) 已于 2026-10-14 通过 GitHub Actions 部署并完成线上检查。首次发布证据见 [docs/deployment.json](docs/deployment.json)。
 
-```sh
-gh repo create CastorRise/gallery --public --source=. --remote=origin
-```
-
-不要加 `--push`，也不要对现有个人站操作。独立仓库发布分支是 `main`。在 **gallery 仓库**的 Settings → Pages → Build and deployment 中选择 **GitHub Actions**。不更改 `CastorRise.github.io` 的设置。
+独立仓库发布分支为 `main`，Pages 的构建方式为 GitHub Actions；当前本机分支已跟踪 `origin/main`。认证使用此仓库的 `gh auth git-credential` helper，无 Token 文件。以后发布使用下面的后台确认流程，无需重新创建仓库。不更改 `CastorRise.github.io` 的设置。
 
 后台重新预览，在明确看到摘要后输入 `PUBLISH CastorRise/gallery` 并点击确认，才创建提交、执行 `git push origin main`。发布计划锁定图库 revision 和工作区文件摘要；内容变化需重建预览。只接受经核对的 CastorRise/gallery HTTPS origin 与 main 分支。推送使用本机 Git/gh 认证，不使用浏览器 Token。
 
