@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import { data, url } from '../../lib/content';
+export function getStaticPaths() {
+  return data.collections.map((collection) => ({
+    params: { id: collection.id },
+    props: { collection },
+  }));
+}
+const { collection: c } = Astro.props;
+const photos = c.photoIds
+  .map((id) => data.photos.find((p) => p.id === id))
+  .filter((p) => p !== undefined);
+---
+
+<Layout title={c.name} description={c.description || c.name}>
+  <section class="page-intro">
+    <a href={url('collections/')} class="back-link">
+      ← Collections
+    </a>
+    <p class="eyebrow">{c.photoIds.length} PHOTOGRAPHS</p>
+    <h1>
+      {c.englishName || c.name}
+      <span>{c.name}</span>
+    </h1>
+    {c.description && <p class="intro-description">{c.description}</p>}
+  </section>
+  <section class="gallery-section">
+    <PhotoGrid photos={photos} />
+  </section>
+</Layout>

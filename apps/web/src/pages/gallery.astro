@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import { data, ordered } from '../lib/content';
+const cities = [
+  ...new Set(data.photos.map((p) => p.location.city).filter(Boolean)),
+];
+---
+
+<Layout
+  title="Gallery"
+  description="CastorRise 摄影作品集，浏览光影、城市与天气的片刻。"
+>
+  <section class="page-intro">
+    <p class="eyebrow">THE COMPLETE ARCHIVE</p>
+    <div class="intro-row">
+      <h1>
+        Gallery<span>每一帧，都是世界的一片。</span>
+      </h1>
+      <p>
+        <span id="result-count">{data.photos.length}</span> PHOTOGRAPHS
+      </p>
+    </div>
+  </section>
+  <section class="gallery-section">
+    <form id="gallery-controls" class="gallery-controls" role="search">
+      <label class="search-field">
+        <span class="sr-only">搜索作品</span>
+        <input
+          type="search"
+          id="gallery-search"
+          placeholder="Search photographs / 搜索作品"
+        />
+      </label>
+      <label>
+        <span class="sr-only">分类</span>
+        <select id="category-filter">
+          <option value="">All categories</option>
+          {data.categories
+            .toSorted((a, b) => a.order - b.order)
+            .map((c) => (
+              <option value={c.id}>{c.name}</option>
+            ))}
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">地点</span>
+        <select id="city-filter">
+          <option value="">All locations</option>
+          {cities.map((city) => (
+            <option>{city}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">排序</span>
+        <select id="sort-filter">
+          <option value="order">Curated order</option>
+          <option value="taken">Date taken ↓</option>
+          <option value="published">Date published ↓</option>
+        </select>
+      </label>
+    </form>
+    <PhotoGrid photos={ordered} filterable />
+    <p id="gallery-empty" class="quiet-empty" hidden>
+      没有找到匹配的作品。
+    </p>
+    <noscript>
+      <p>筛选需要 JavaScript；所有作品仍可浏览。</p>
+    </noscript>
+  </section>
+  <script>
+    import '../scripts/gallery';
+  </script>
+</Layout>

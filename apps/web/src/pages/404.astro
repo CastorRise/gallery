@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { url } from '../lib/content';
+---
+
+<Layout title="Page not found">
+  <section class="explore">
+    <p class="eyebrow">404 / OUT OF FRAME</p>
+    <h1>这一帧还未被记录。</h1>
+    <a class="outline-link" href={url('gallery/')}>
+      返回作品集 ↗
+    </a>
+  </section>
+</Layout>

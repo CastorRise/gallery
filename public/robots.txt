@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /gallery/
+Sitemap: https://castorrise.github.io/gallery/sitemap-index.xml

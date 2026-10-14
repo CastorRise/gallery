@@ -1,0 +1,75 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhotoImage from '../../components/PhotoImage.astro';
+import { data, url, categoryName, imageUrl, largest } from '../../lib/content';
+export function getStaticPaths() {
+  return data.photos.map((photo) => ({
+    params: { id: photo.id },
+    props: { photo },
+  }));
+}
+const { photo: p } = Astro.props;
+const collections = data.collections.filter((c) => c.photoIds.includes(p.id));
+const labels: Record<string, string> = {
+  camera: 'Camera',
+  lens: 'Lens',
+  focalLength: 'Focal length',
+  aperture: 'Aperture',
+  shutterSpeed: 'Shutter speed',
+  iso: 'ISO',
+  dateTaken: 'Date taken',
+};
+---
+
+<Layout
+  title={p.title}
+  description={p.description || p.title}
+  image={new URL(imageUrl(largest(p).file), Astro.site).href}
+>
+  <section class="detail">
+    <a href={url('gallery/')} class="back-link">
+      ← Gallery
+    </a>
+    <a
+      class="detail-image"
+      data-photo={p.id}
+      href={imageUrl(largest(p).file)}
+      aria-label={`全屏浏览：${p.title}`}
+    >
+      <PhotoImage photo={p} eager sizes="(max-width: 900px) 100vw, 90vw" />
+    </a>
+    <div class="detail-copy">
+      <div>
+        <p class="eyebrow">{categoryName(p.categoryId)}</p>
+        <h1>{p.title}</h1>
+        {p.description && <p class="description">{p.description}</p>}
+        <div class="detail-tags">
+          {p.takenAt && <span>{p.takenAt}</span>}
+          {p.location.label && <span>{p.location.label}</span>}
+        </div>
+        {collections.length > 0 && (
+          <div class="detail-collections">
+            <p class="eyebrow">IN THESE COLLECTIONS</p>
+            {collections.map((c) => (
+              <a href={url(`collections/${c.id}/`)}>
+                {c.englishName || c.name} ↗
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+      {Object.keys(p.exif).length > 0 && (
+        <dl class="exif">
+          {Object.entries(p.exif)
+            .filter(([, v]) => v)
+            .map(([key, value]) => (
+              <div>
+                <dt>{labels[key] ?? key}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+        </dl>
+      )}
+    </div>
+  </section>
+</Layout>

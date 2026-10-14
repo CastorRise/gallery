@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import Lightbox from '../components/Lightbox.astro';
+import { data, url, imageUrl, largest } from '../lib/content';
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const { title, description = data.settings.manifesto, image } = Astro.props;
+const pageTitle = title
+  ? `${title} · ${data.settings.name}`
+  : data.settings.name;
+const current = Astro.url.pathname;
+const canonical = new URL(current, Astro.site);
+const cover =
+  data.photos.find((p) => p.id === data.settings.homeCoverId) ?? data.photos[0];
+const og =
+  image ??
+  (cover ? new URL(imageUrl(largest(cover).file), Astro.site).href : undefined);
+const links = [
+  ['', 'Home'],
+  ['gallery/', 'Gallery'],
+  ['collections/', 'Collections'],
+  ['map/', 'Map'],
+  ['journal/', 'Journal'],
+  ['about/', 'About'],
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0B0B0D" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    {og && <meta property="og:image" content={og} />}
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      跳转到内容
+    </a>
+    <header class="site-header">
+      <a class="wordmark" href={url()} aria-label="CastorRise Gallery 首页">
+        CASTORRISE<span>GALLERY</span>
+      </a>
+      <button
+        id="menu-toggle"
+        class="menu-toggle"
+        aria-expanded="false"
+        aria-controls="main-nav"
+      >
+        Menu <span>＋</span>
+      </button>
+      <nav id="main-nav" aria-label="主导航">
+        {links.map(([path, label]) => (
+          <a
+            href={url(path)}
+            aria-current={
+              (path === '' ? current === url() : current.startsWith(url(path)))
+                ? 'page'
+                : undefined
+            }
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <a href={url()} class="wordmark">
+        CASTORRISE<span>GALLERY</span>
+      </a>
+      <p>在流动的世界里，留下一瞬。</p>
+      <div>
+        <a href="https://castorrise.github.io/">Personal website ↗</a>
+        <a href={data.settings.github}>GitHub ↗</a>
+        <span>© {new Date().getFullYear()} CastorRise</span>
+      </div>
+    </footer>
+    <Lightbox />
+    <script>
+      const menu = document.querySelector<HTMLButtonElement>('#menu-toggle');
+      menu?.addEventListener('click', () => {
+        const open = menu.getAttribute('aria-expanded') !== 'true';
+        menu.setAttribute('aria-expanded', String(open));
+        document.querySelector('#main-nav')?.classList.toggle('is-open', open);
+      });
+    </script>
+  </body>
+</html>

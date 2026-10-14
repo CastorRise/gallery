@@ -1,0 +1,44 @@
+{
+  "name": "castorrise-gallery",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "npm run dev -w @gallery/web",
+    "admin": "npm run build -w @gallery/admin && node --import tsx apps/admin/server.ts",
+    "admin:dev": "node --import tsx apps/admin/server.ts --dev",
+    "check": "tsc --noEmit && npm run check -w @gallery/web",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:browser": "playwright test",
+    "prepare:public": "node --import tsx scripts/prepare-public.ts",
+    "build": "npm run prepare:public && npm run build:web && npm run audit:dist",
+    "build:web": "node --import tsx scripts/validate-public.ts && npm run build -w @gallery/web",
+    "audit:dist": "node --import tsx scripts/audit-dist.ts",
+    "preview": "npm run preview -w @gallery/web",
+    "seed:existing": "node --import tsx scripts/import-existing.ts",
+    "validate": "node --import tsx scripts/validate.ts",
+    "format": "prettier --write apps packages scripts tests *.json *.ts *.md .github"
+  },
+  "dependencies": {
+    "exifreader": "^4.33.1",
+    "sharp": "^0.35.5",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^24.0.0",
+    "lighthouse": "^13.5.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3"
+  }
+}

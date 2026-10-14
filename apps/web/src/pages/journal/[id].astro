@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhotoImage from '../../components/PhotoImage.astro';
+import { data, url, photoUrl } from '../../lib/content';
+export function getStaticPaths() {
+  return data.journals.map((journal) => ({
+    params: { id: journal.id },
+    props: { journal },
+  }));
+}
+const { journal: j } = Astro.props;
+const cover = data.photos.find((p) => p.id === j.coverId);
+---
+
+<Layout title={j.title} description={j.subtitle || j.title}>
+  <article class="journal-article">
+    <header class="journal-heading">
+      <a class="back-link" href={url('journal/')}>
+        ← Journal
+      </a>
+      <p class="eyebrow">
+        {j.date.slice(0, 10)} / {j.place}
+      </p>
+      <h1>{j.title}</h1>
+      <p>{j.subtitle}</p>
+    </header>
+    {cover && (
+      <div class="journal-cover">
+        <PhotoImage photo={cover} eager sizes="100vw" />
+      </div>
+    )}
+    <div class="journal-body">
+      {j.blocks.map((b) =>
+        b.type === 'paragraph' ? (
+          <p class="journal-paragraph">{b.text}</p>
+        ) : b.type === 'quote' ? (
+          <blockquote>
+            {b.text}
+            {b.caption && <cite>{b.caption}</cite>}
+          </blockquote>
+        ) : (
+          <figure class:list={['journal-photos', b.type]}>
+            <div>
+              {b.photoIds.map((id) => {
+                const p = data.photos.find((p) => p.id === id);
+                return (
+                  p && (
+                    <a href={photoUrl(p.id)} data-photo={p.id}>
+                      <PhotoImage
+                        photo={p}
+                        sizes={b.type === 'image' ? '90vw' : '45vw'}
+                      />
+                    </a>
+                  )
+                );
+              })}
+            </div>
+            {b.caption && <figcaption>{b.caption}</figcaption>}
+          </figure>
+        ),
+      )}
+    </div>
+  </article>
+</Layout>

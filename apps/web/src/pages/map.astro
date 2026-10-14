@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { data, imageUrl, photoUrl } from '../lib/content';
+const photos = data.photos
+  .filter(
+    (p) =>
+      p.location.latitude !== undefined && p.location.longitude !== undefined,
+  )
+  .map((p) => ({
+    id: p.id,
+    title: p.title,
+    city: p.location.city,
+    latitude: p.location.latitude,
+    longitude: p.location.longitude,
+    privacy: p.location.privacy,
+    image: imageUrl(p.variants[0].file),
+    url: photoUrl(p.id),
+  }));
+---
+
+<Layout title="Map" description="在地图上探索 CastorRise 的公开摄影地点。">
+  <section class="page-intro map-intro">
+    <p class="eyebrow">PLACES & PERSPECTIVES</p>
+    <h1>
+      A map of moments<span>沿着光影，走过世界。</span>
+    </h1>
+  </section>
+  <section class="map-section">
+    <div class="map-controls">
+      <label>
+        城市
+        <select id="map-city">
+          <option value="">全部城市</option>
+          {[...new Set(photos.map((p) => p.city).filter(Boolean))].map((c) => (
+            <option>{c}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        专题
+        <select id="map-collection">
+          <option value="">全部专题</option>
+          {data.collections.map((c) => (
+            <option value={c.id}>{c.name}</option>
+          ))}
+        </select>
+      </label>
+      <span id="map-count" role="status"></span>
+    </div>
+    <div id="photo-map" role="region" aria-label="公开摄影地点地图"></div>
+    <p class="map-note">
+      城市标记表示粗略城市中心，近似位置经取整；均不代表精确拍摄位置。地图底图由
+      OpenStreetMap 提供。
+    </p>
+    <noscript>
+      <p>交互地图需要 JavaScript。</p>
+    </noscript>
+  </section>
+  <script
+    id="map-data"
+    type="application/json"
+    set:html={JSON.stringify({
+      photos,
+      collections: data.collections.map((c) => ({
+        id: c.id,
+        photoIds: c.photoIds,
+      })),
+    }).replace(/</g, '\\u003c')}
+  />
+  <script>
+    import '../scripts/map';
+  </script>
+</Layout>

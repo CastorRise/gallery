@@ -1,0 +1,6 @@
+node_modules
+.local
+dist
+package-lock.json
+content/gallery.json
+public/images

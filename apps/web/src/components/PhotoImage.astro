@@ -1,0 +1,29 @@
+---
+import { imageUrl, largest, srcset } from '../lib/content';
+import type { PublicPhoto } from '../../../../packages/shared/src/index';
+interface Props {
+  photo: PublicPhoto;
+  eager?: boolean;
+  sizes?: string;
+  class?: string;
+}
+const {
+  photo: p,
+  eager = false,
+  sizes = '(max-width: 650px) 100vw, (max-width: 1050px) 50vw, 33vw',
+  class: className,
+} = Astro.props;
+---
+
+<img
+  src={imageUrl(largest(p).file)}
+  srcset={srcset(p)}
+  sizes={sizes}
+  width={p.width}
+  height={p.height}
+  alt={p.alt}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  fetchpriority={eager ? 'high' : 'auto'}
+  class={className}
+/>

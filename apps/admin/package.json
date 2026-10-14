@@ -1,0 +1,22 @@
+{
+  "name": "@gallery/admin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/express": "^5.0.0",
+    "@types/multer": "^2.0.0"
+  }
+}

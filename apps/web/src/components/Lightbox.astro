@@ -1,0 +1,57 @@
+---
+import { data, photoUrl, imageUrl, largest } from '../lib/content';
+const payload = data.photos.map((p) => ({
+  id: p.id,
+  title: p.title,
+  description: p.description,
+  exif: p.exif,
+  location: p.location,
+  src: imageUrl(largest(p).file),
+  url: photoUrl(p.id),
+  collections: data.collections
+    .filter((c) => c.photoIds.includes(p.id))
+    .map((c) => ({ name: c.name, url: `/gallery/collections/${c.id}/` })),
+}));
+---
+
+<dialog id="lightbox" aria-label="全屏照片浏览器">
+  <div class="viewer-toolbar">
+    <span id="viewer-count"></span>
+    <div>
+      <button id="viewer-info" aria-label="查看照片信息" aria-pressed="false">
+        Info
+      </button>
+      <button id="viewer-zoom" aria-label="缩放照片" aria-pressed="false">
+        Zoom +
+      </button>
+      <button id="viewer-close" aria-label="关闭照片浏览器">
+        Close ×
+      </button>
+    </div>
+  </div>
+  <div class="viewer-stage">
+    <p id="viewer-loading" role="status">
+      正在加载照片…
+    </p>
+    <img id="viewer-image" alt="" />
+    <button id="viewer-prev" class="viewer-arrow prev" aria-label="上一张照片">
+      ←
+    </button>
+    <button id="viewer-next" class="viewer-arrow next" aria-label="下一张照片">
+      →
+    </button>
+  </div>
+  <div class="viewer-footer">
+    <h2 id="viewer-title"></h2>
+    <a id="viewer-detail">查看作品详情 ↗</a>
+  </div>
+  <aside id="viewer-panel" hidden></aside>
+</dialog>
+<script
+  type="application/json"
+  id="viewer-data"
+  set:html={JSON.stringify(payload).replace(/</g, '\\u003c')}
+/>
+<script>
+  import '../scripts/viewer';
+</script>

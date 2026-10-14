@@ -1,0 +1,36 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhotoImage from '../../components/PhotoImage.astro';
+import { data, url } from '../../lib/content';
+---
+
+<Layout title="Journal">
+  <section class="page-intro">
+    <p class="eyebrow">FIELD NOTES & STORIES</p>
+    <h1>
+      Journal<span>照片之外，旅程之中。</span>
+    </h1>
+  </section>
+  <section class="section top-none">
+    <div class="story-grid">
+      {data.journals
+        .toSorted((a, b) => b.date.localeCompare(a.date))
+        .map((j) => {
+          const p = data.photos.find((p) => p.id === j.coverId);
+          return (
+            <a class="story-card" href={url(`journal/${j.id}/`)}>
+              {p && <PhotoImage photo={p} />}
+              <p class="eyebrow">
+                {j.date.slice(0, 10)} / {j.place}
+              </p>
+              <h2>{j.title}</h2>
+              <p>{j.subtitle}</p>
+            </a>
+          );
+        })}
+    </div>
+    {!data.journals.length && (
+      <p class="quiet-empty">摄影手记尚未发布。下一段旅程，会从这里开始。</p>
+    )}
+  </section>
+</Layout>

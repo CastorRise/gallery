@@ -1,0 +1,42 @@
+---
+import PhotoImage from './PhotoImage.astro';
+import { photoUrl, categoryName } from '../lib/content';
+import type { PublicPhoto } from '../../../../packages/shared/src/index';
+interface Props {
+  photos: PublicPhoto[];
+  filterable?: boolean;
+}
+const { photos, filterable = false } = Astro.props;
+---
+
+<div class="photo-grid" id={filterable ? 'gallery-grid' : undefined}>
+  {photos.map((p) => (
+    <article
+      class="photo-card"
+      data-id={p.id}
+      data-category={p.categoryId}
+      data-city={p.location.city ?? ''}
+      data-search={`${p.title} ${p.description} ${p.location.city ?? ''} ${categoryName(p.categoryId)}`}
+      data-taken={p.takenAt}
+      data-published={p.publishedAt ?? p.createdAt}
+      data-order={p.order}
+    >
+      <a
+        href={photoUrl(p.id)}
+        data-photo={p.id}
+        aria-label={`浏览：${p.title}`}
+      >
+        <PhotoImage photo={p} />
+        <span class="image-open" aria-hidden="true">
+          ↗
+        </span>
+      </a>
+      <div class="photo-caption">
+        <h3>
+          <a href={photoUrl(p.id)}>{p.title}</a>
+        </h3>
+        <span>{p.location.city ?? categoryName(p.categoryId)}</span>
+      </div>
+    </article>
+  ))}
+</div>

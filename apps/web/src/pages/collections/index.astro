@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhotoImage from '../../components/PhotoImage.astro';
+import { data, url } from '../../lib/content';
+---
+
+<Layout title="Collections">
+  <section class="page-intro">
+    <p class="eyebrow">VISUAL CHAPTERS</p>
+    <h1>
+      Collections<span>把相遇的片刻，连成故事。</span>
+    </h1>
+  </section>
+  <section class="section top-none">
+    <div class="collection-covers">
+      {data.collections
+        .toSorted((a, b) => a.order - b.order)
+        .map((c) => {
+          const p =
+            data.photos.find((p) => p.id === c.coverId) ??
+            data.photos.find((p) => c.photoIds.includes(p.id));
+          return (
+            <a class="collection-cover" href={url(`collections/${c.id}/`)}>
+              {p && (
+                <PhotoImage photo={p} sizes="(max-width:650px) 100vw, 50vw" />
+              )}
+              <div>
+                <span class="eyebrow">{c.photoIds.length} PHOTOGRAPHS</span>
+                <h2>{c.englishName || c.name}</h2>
+                <p>{c.name}</p>
+              </div>
+            </a>
+          );
+        })}
+    </div>
+    {!data.collections.length && <p class="quiet-empty">专题正在整理中。</p>}
+  </section>
+</Layout>
