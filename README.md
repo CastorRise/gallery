@@ -1,4 +1,4 @@
-# CastorRise Gallery
+# CastorRise · 摄影网站
 
 独立的摄影作品网站与 macOS 本地管理工作室。公开站目标地址为 **https://castorrise.github.io/gallery/**，仓库为 **CastorRise/gallery**。公开站使用暗色摄影画廊设计，所有照片按原始比例展示。后台只在本机运行。
 
@@ -93,7 +93,7 @@ Settings 编辑网站名称、宣言、首页封面、介绍、理念、设备�
 
 后台 Publish 的“构建与预览变更”执行内容校验、图片存在与尺寸检查、GPS/元数据检查、凭据和路径模式扫描、公开快照生成、Astro 生产构建和构建隔离审计，显示照片/专题/故事的新增、修改、移除，以及分类、设置变化和 Git 状态。摘要以 origin/main 的公开快照为基线，首次未推送时显示全部新增；重复预览不会重置待发布数量。这一步不会推送。
 
-独立公开仓库 [CastorRise/gallery](https://github.com/CastorRise/gallery) 已创建，网站 [CastorRise Gallery](https://castorrise.github.io/gallery/) 已于 2026-10-14 通过 GitHub Actions 部署并完成线上检查。首次发布证据见 [docs/deployment.json](docs/deployment.json)。
+独立公开仓库 [CastorRise/gallery](https://github.com/CastorRise/gallery) 已创建，网站 [CastorRise](https://castorrise.github.io/gallery/) 已于 2026-10-14 通过 GitHub Actions 部署并完成线上检查。首次发布证据见 [docs/deployment.json](docs/deployment.json)。
 
 独立仓库发布分支为 `main`，Pages 的构建方式为 GitHub Actions；当前本机分支已跟踪 `origin/main`。认证使用此仓库的 `gh auth git-credential` helper，无 Token 文件。以后发布使用下面的后台确认流程，无需重新创建仓库。不更改 `CastorRise.github.io` 的设置。
 
@@ -141,7 +141,7 @@ API/图片测试使用临时文件并清理；浏览器后台使用公开衍生�
 ## 常见问题
 
 - **图库看起来未更新**：编辑只修改本机图库；执行构建与预览才生成公开快照。
-- **EXIF 空白**：来源照片可能已移除拍摄参数；界面隐藏缺失值。
+- **EXIF 空白**：先核对 `.local/originals` 留存文件中的拍摄参数与图库记录；只有确认原文件也缺少字段时，才可判断为来源缺失。界面隐藏缺失值；公开 WebP 会主动移除 EXIF，不能用它判断原文件是否含有参数。
 - **HEIC 失败**：本机 Sharp 解码器缺少 HEVC；先用 macOS“预览”导出高质量 JPEG 再导入。不上传第三方转换网站。
 - **刷新后会话失效**：后台重启会生成新 CSRF Token，刷新页面即可。
 - **保存冲突**：另一标签页已修改 revision，刷新后重试；未保存内容可先复制保留。

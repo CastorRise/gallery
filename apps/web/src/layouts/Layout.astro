@@ -39,6 +39,7 @@ const links = [
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <meta property="og:site_name" content={data.settings.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -51,8 +52,15 @@ const links = [
       跳转到内容
     </a>
     <header class="site-header">
-      <a class="wordmark" href={url()} aria-label="CastorRise Gallery 首页">
-        CASTORRISE<span>GALLERY</span>
+      <a
+        class="wordmark"
+        href={url()}
+        aria-label={`${data.settings.name} 首页`}
+      >
+        {data.settings.name}
+        <span class="wordmark-dot" aria-hidden="true">
+          .
+        </span>
       </a>
       <button
         id="menu-toggle"
@@ -81,8 +89,15 @@ const links = [
       <slot />
     </main>
     <footer class="site-footer">
-      <a href={url()} class="wordmark">
-        CASTORRISE<span>GALLERY</span>
+      <a
+        href={url()}
+        class="wordmark"
+        aria-label={`${data.settings.name} 首页`}
+      >
+        {data.settings.name}
+        <span class="wordmark-dot" aria-hidden="true">
+          .
+        </span>
       </a>
       <p>在流动的世界里，留下一瞬。</p>
       <div>

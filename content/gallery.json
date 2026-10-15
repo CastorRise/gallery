@@ -106,8 +106,16 @@
       "order": 2,
       "createdAt": "2026-10-14T08:41:41.307Z",
       "publishedAt": "2026-10-14T08:41:41.307Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2026-07-05",
+      "exif": {
+        "camera": "DJI FC9113",
+        "lens": "24.0 mm f/1.8",
+        "focalLength": "8.67 mm",
+        "aperture": "f/1.8",
+        "shutterSpeed": "1/125",
+        "iso": "100",
+        "dateTaken": "2026:07:05 23:08:54"
+      },
       "variants": [
         {
           "width": 480,
@@ -337,8 +345,16 @@
       "order": 7,
       "createdAt": "2026-10-14T08:41:45.058Z",
       "publishedAt": "2026-10-14T08:41:45.058Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2026-05-03",
+      "exif": {
+        "camera": "Canon EOS 700D",
+        "lens": "EF-S55-250mm f/4-5.6 IS STM",
+        "focalLength": "64 mm",
+        "aperture": "f/4.5",
+        "shutterSpeed": "1/2000",
+        "iso": "100",
+        "dateTaken": "2026:05:03 11:30:44"
+      },
       "variants": [
         {
           "width": 480,
@@ -378,8 +394,16 @@
       "order": 8,
       "createdAt": "2026-10-14T08:41:45.585Z",
       "publishedAt": "2026-10-14T08:41:45.585Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2026-05-04",
+      "exif": {
+        "camera": "Canon EOS 700D",
+        "lens": "EF-S55-250mm f/4-5.6 IS STM",
+        "focalLength": "117 mm",
+        "aperture": "f/8.0",
+        "shutterSpeed": "1/60",
+        "iso": "100",
+        "dateTaken": "2026:05:04 20:24:25"
+      },
       "variants": [
         {
           "width": 480,
@@ -419,8 +443,16 @@
       "order": 9,
       "createdAt": "2026-10-14T08:41:45.951Z",
       "publishedAt": "2026-10-14T08:41:45.951Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2026-05-04",
+      "exif": {
+        "camera": "Canon EOS 700D",
+        "lens": "EF-S55-250mm f/4-5.6 IS STM",
+        "focalLength": "89 mm",
+        "aperture": "f/8.0",
+        "shutterSpeed": "1/250",
+        "iso": "200",
+        "dateTaken": "2026:05:04 20:25:03"
+      },
       "variants": [
         {
           "width": 480,
@@ -464,8 +496,16 @@
       "order": 10,
       "createdAt": "2026-10-14T08:41:46.244Z",
       "publishedAt": "2026-10-14T08:41:46.244Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2025-03-16",
+      "exif": {
+        "camera": "Canon EOS 700D",
+        "lens": "EF-S55-250mm f/4-5.6 IS STM",
+        "focalLength": "113 mm",
+        "aperture": "f/8.0",
+        "shutterSpeed": "1/100",
+        "iso": "100",
+        "dateTaken": "2025:03:16 18:32:30"
+      },
       "variants": [
         {
           "width": 480,
@@ -509,8 +549,16 @@
       "order": 11,
       "createdAt": "2026-10-14T08:41:46.588Z",
       "publishedAt": "2026-10-14T08:41:46.588Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2025-03-16",
+      "exif": {
+        "camera": "Canon EOS 700D",
+        "lens": "EF-S55-250mm f/4-5.6 IS STM",
+        "focalLength": "250 mm",
+        "aperture": "f/8.0",
+        "shutterSpeed": "1/500",
+        "iso": "200",
+        "dateTaken": "2025:03:16 18:09:17"
+      },
       "variants": [
         {
           "width": 480,
@@ -549,8 +597,15 @@
       "order": 12,
       "createdAt": "2026-10-14T08:41:46.931Z",
       "publishedAt": "2026-10-14T08:41:46.931Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2025-03-03",
+      "exif": {
+        "lens": "EF-S55-250mm f/4-5.6 IS STM",
+        "focalLength": "250 mm",
+        "aperture": "f/8.0",
+        "shutterSpeed": "1/250",
+        "iso": "400",
+        "dateTaken": "2025:03:03 20:42:21"
+      },
       "variants": [
         {
           "width": 480,
@@ -589,8 +644,15 @@
       "order": 13,
       "createdAt": "2026-10-14T08:41:47.234Z",
       "publishedAt": "2026-10-14T08:41:47.234Z",
-      "takenAt": "",
-      "exif": {},
+      "takenAt": "2025-03-03",
+      "exif": {
+        "lens": "EF-S55-250mm f/4-5.6 IS STM",
+        "focalLength": "250 mm",
+        "aperture": "f/8.0",
+        "shutterSpeed": "1/320",
+        "iso": "400",
+        "dateTaken": "2025:03:03 20:42:28"
+      },
       "variants": [
         {
           "width": 480,
@@ -702,7 +764,7 @@
   ],
   "journals": [],
   "settings": {
-    "name": "CastorRise Gallery",
+    "name": "CastorRise",
     "manifesto": "在流动的世界里，留下一瞬。",
     "homeCoverId": "14f56d72-5c9d-4054-aad4-e4917fe7a827",
     "bio": "",

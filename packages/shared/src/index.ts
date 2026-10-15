@@ -200,7 +200,7 @@ export function emptyLibrary(): Library {
     collections: [],
     journals: [],
     settings: {
-      name: 'CastorRise Gallery',
+      name: 'CastorRise',
       manifesto: '在流动的世界里，留下一瞬。',
       bio: '',
       philosophy: '',

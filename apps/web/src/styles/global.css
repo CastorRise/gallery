@@ -116,18 +116,21 @@ input::placeholder {
   z-index: 10;
 }
 .wordmark {
-  font-size: 18px;
-  letter-spacing: 0.15em;
-  font-weight: 500;
-  display: flex;
+  display: inline-flex;
   align-items: baseline;
-  gap: 14px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial,
+    'PingFang SC', 'PingFang TC', 'Hiragino Sans', 'Microsoft YaHei',
+    'Noto Sans CJK SC', sans-serif;
+  font-size: 19px;
+  letter-spacing: 0.015em;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
 }
-.wordmark span {
-  font-size: 9px;
-  letter-spacing: 0.22em;
+.wordmark-dot {
   color: var(--muted);
-  font-weight: 400;
 }
 .site-header nav {
   display: flex;
@@ -875,9 +878,6 @@ input::placeholder {
   .site-header nav {
     gap: 20px;
   }
-  .wordmark span {
-    display: none;
-  }
   .photo-grid {
     columns: 2;
   }
@@ -899,7 +899,7 @@ input::placeholder {
     height: 72px;
   }
   .wordmark {
-    font-size: 16px;
+    font-size: 18px;
   }
   .menu-toggle {
     display: flex;
