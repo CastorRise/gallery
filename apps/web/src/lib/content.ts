@@ -32,6 +32,17 @@ export function pageContent(pathname: string) {
       title: translate(p.title),
       description: translate(p.description),
       alt: translate(p.alt),
+      exif: {
+        ...p.exif,
+        ...(p.exif.dateTaken
+          ? {
+              dateTaken: p.exif.dateTaken.replace(
+                /^(\d{4}):(\d{2}):(\d{2})(?=\s|$)/,
+                '$1.$2.$3',
+              ),
+            }
+          : {}),
+      },
       location: {
         ...p.location,
         ...(p.location.city ? { city: translate(p.location.city) } : {}),
