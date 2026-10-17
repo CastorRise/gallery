@@ -1,4 +1,5 @@
-export {};
+import { messages, localeFromPath, exifKeys } from '../lib/i18n';
+const t = messages[localeFromPath(window.location.pathname)];
 type Frame = {
   id: string;
   title: string;
@@ -31,7 +32,7 @@ function show() {
   document.querySelector('#viewer-zoom')!.setAttribute('aria-pressed', 'false');
   img.alt = f.title;
   loading.hidden = false;
-  loading.textContent = '正在加载照片…';
+  loading.textContent = t.loading;
   img.src = f.src;
   if (img.complete && img.naturalWidth) loading.hidden = true;
   document.querySelector('#viewer-count')!.textContent =
@@ -41,9 +42,9 @@ function show() {
   detail.href = f.url;
   panel.replaceChildren();
   for (const [label, value] of [
-    ['Description', f.description],
-    ['Location', f.location.label ?? f.location.city ?? ''],
-    ...Object.entries(f.exif),
+    [t.description, f.description],
+    [t.location, f.location.label ?? f.location.city ?? ''],
+    ...exifKeys.map((key) => [t[key], f.exif[key]]),
   ])
     if (value) {
       const p = document.createElement('p');
@@ -80,13 +81,21 @@ img.addEventListener('load', () => {
 });
 img.addEventListener('error', () => {
   loading.hidden = false;
-  loading.textContent = '照片加载失败，请稍后重试。';
+  loading.textContent = t.loadError;
 });
 document.addEventListener('click', (e) => {
   const target = (e.target as HTMLElement).closest<HTMLAnchorElement>(
     'a[data-photo]',
   );
-  if (!target || e.ctrlKey || e.metaKey) return;
+  if (
+    !target ||
+    e.ctrlKey ||
+    e.metaKey ||
+    e.shiftKey ||
+    e.altKey ||
+    e.button !== 0
+  )
+    return;
   const frame = photoFrames.find((f) => f.id === target.dataset.photo);
   if (!frame) return;
   e.preventDefault();

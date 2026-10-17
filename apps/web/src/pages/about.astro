@@ -1,13 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { data } from '../lib/content';
+import { pageContent } from '../lib/content';
+const { data, t } = pageContent(Astro.url.pathname);
 ---
 
-<Layout title="About">
+<Layout title={t.about}>
   <section class="page-intro">
-    <p class="eyebrow">BEHIND THE FRAME</p>
+    <p class="eyebrow">{t.behind}</p>
     <h1>
-      About<span>CastorRise</span>
+      {t.about}
+      <span>CastorRise</span>
     </h1>
   </section>
   <section class="about-layout">
@@ -16,21 +18,21 @@ import { data } from '../lib/content';
       {data.settings.bio && <p>{data.settings.bio}</p>}
       {data.settings.philosophy && (
         <>
-          <p class="eyebrow">PHILOSOPHY</p>
+          <p class="eyebrow">{t.philosophy}</p>
           <p>{data.settings.philosophy}</p>
         </>
       )}
     </div>
     <aside>
-      <p class="eyebrow">EQUIPMENT</p>
+      <p class="eyebrow">{t.equipment}</p>
       <ul class="equipment">
         {data.settings.equipment.map((e) => (
           <li>{e}</li>
         ))}
       </ul>
-      <p class="eyebrow">FIND ME ELSEWHERE</p>
+      <p class="eyebrow">{t.elsewhere}</p>
       <a href={data.settings.github}>GitHub ↗</a>
-      <a href="https://castorrise.github.io/">Personal website ↗</a>
+      <a href="https://castorrise.github.io/">{t.website} ↗</a>
       {data.settings.email && (
         <a href={`mailto:${data.settings.email}`}>{data.settings.email} ↗</a>
       )}

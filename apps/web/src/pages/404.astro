@@ -1,14 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { url } from '../lib/content';
+import { pageContent } from '../lib/content';
+const { url, t } = pageContent(Astro.url.pathname);
 ---
 
-<Layout title="Page not found">
+<Layout title={t.notFound}>
   <section class="explore">
-    <p class="eyebrow">404 / OUT OF FRAME</p>
-    <h1>这一帧还未被记录。</h1>
+    <p class="eyebrow">404 / {t.outOfFrame}</p>
+    <h1>{t.missingFrame}</h1>
     <a class="outline-link" href={url('gallery/')}>
-      返回作品集 ↗
+      {t.backGallery} ↗
     </a>
   </section>
 </Layout>

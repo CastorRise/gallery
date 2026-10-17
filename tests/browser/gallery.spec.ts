@@ -20,44 +20,28 @@ test('公开站导航、真实图片、筛选、详情 URL、键盘浏览器及�
     .getByRole('link', { name: 'Gallery', exact: true })
     .click();
   await expect(page.locator('.photo-card')).toHaveCount(14);
-  await page.getByPlaceholder('Search photographs / 搜索作品').fill('佩佩');
+  await page.getByPlaceholder('Search photographs').fill('Pepe');
   await expect(page.locator('.photo-card:visible')).toHaveCount(1);
-  await page.getByPlaceholder('Search photographs / 搜索作品').fill('');
+  await page.getByPlaceholder('Search photographs').fill('');
   await page.locator('#category-filter').selectOption('weather');
   await expect(page.locator('.photo-card:visible')).toHaveCount(5);
-  await page.locator('.photo-card:visible a[data-photo]').first().click();
+  await page.locator('.photo-card:visible > a').first().click();
+  await expect(page).toHaveURL(/\/gallery\/photos\/[^/]+\/$/);
+  await expect(page.locator('#lightbox')).not.toBeVisible();
+  await expect(page.locator('.detail h1')).toBeVisible();
+  await expect(page.locator('#exif-heading')).toContainText('EXIF');
+  await expect(page.locator('#main-nav a[aria-current="page"]')).toHaveText(
+    'Gallery',
+  );
+  await page.locator('.detail-image').click();
   await expect(page.locator('#lightbox')).toBeVisible();
-  await expect(page.locator('#viewer-count')).toHaveText('01 / 05');
   await page.keyboard.press('ArrowRight');
-  await expect(page.locator('#viewer-count')).toHaveText('02 / 05');
-  if (isMobile) {
-    const rect = await page.locator('#viewer-image').boundingBox();
-    const cdp = await page.context().newCDPSession(page);
-    const y = rect!.y + rect!.height / 2,
-      x = rect!.x + rect!.width * 0.75;
-    await cdp.send('Input.dispatchTouchEvent', {
-      type: 'touchStart',
-      touchPoints: [{ x, y }],
-    });
-    await cdp.send('Input.dispatchTouchEvent', {
-      type: 'touchMove',
-      touchPoints: [{ x: x - 100, y }],
-    });
-    await cdp.send('Input.dispatchTouchEvent', {
-      type: 'touchEnd',
-      touchPoints: [],
-    });
-    await expect(page.locator('#viewer-count')).toHaveText('03 / 05');
-  }
-  await page.getByRole('button', { name: '缩放照片' }).click();
+  await page.getByRole('button', { name: 'Zoom photograph' }).click();
   await expect(page.locator('#viewer-image')).toHaveClass('zoomed');
-  await page.getByRole('button', { name: '查看照片信息' }).click();
+  await page.getByRole('button', { name: 'View photo information' }).click();
   await expect(page.locator('#viewer-panel')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('#lightbox')).not.toBeVisible();
-  const link = page.locator('.photo-card:visible .photo-caption a').first();
-  await link.click();
-  await expect(page.locator('.detail h1')).toBeVisible();
   await page.reload();
   await expect(page.locator('.detail-image img')).toBeVisible();
   expect(errors).toEqual([]);
@@ -70,10 +54,12 @@ test('专题、Journal 空状态、地图聚合与地点筛选、About、无横�
   await page.locator('.collection-cover').first().click();
   await expect(page.locator('.photo-card')).toHaveCount(5);
   await page.goto('/gallery/journal/');
-  await expect(page.getByText('摄影手记尚未发布。')).toBeVisible();
+  await expect(
+    page.getByText('No stories yet. The next journey begins here.'),
+  ).toBeVisible();
   await page.goto('/gallery/map/');
   await expect(page.locator('.photo-marker')).toHaveCount(3);
-  await page.locator('#map-city').selectOption('长沙');
+  await page.locator('#map-city').selectOption('Changsha');
   await expect(page.locator('.photo-marker')).toHaveCount(1);
   await page.locator('.photo-marker').click();
   await expect(page.locator('.map-popup a')).toHaveCount(3);
@@ -210,4 +196,44 @@ test('后台窄屏布局与键盘焦点', async ({ page }) => {
   expect(await page.evaluate(() => document.activeElement?.tagName)).not.toBe(
     'BODY',
   );
+});
+
+test('详情页顶部四语言切换保留照片并更新 EXIF 和当前导航', async ({
+  page,
+}, testInfo) => {
+  await page.goto('/gallery/gallery/');
+  await page.locator('.photo-card > a').nth(2).click();
+  const id = new URL(page.url()).pathname.split('/').filter(Boolean).at(-1);
+  for (const [locale, label] of [
+    ['zh', '相机'],
+    ['zh-tw', '相機'],
+    ['ja', 'カメラ'],
+    ['en', 'Camera'],
+  ]) {
+    await page.locator('[data-language-toggle]').click();
+    await page
+      .locator(`[data-language-options] a[data-locale="${locale}"]`)
+      .click();
+    await expect(page.locator('html')).toHaveAttribute('data-locale', locale);
+    expect(new URL(page.url()).pathname).toContain(`/photos/${id}/`);
+    await expect(page.locator('.exif dt').first()).toHaveText(label);
+    if (locale === 'zh')
+      await page.screenshot({
+        path: testInfo.outputPath('detail-zh.png'),
+        fullPage: true,
+      });
+    await expect(page.locator('#main-nav a[aria-current="page"]')).toHaveCount(
+      1,
+    );
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+  await page.goto('/gallery/photos/66f4c993-9c14-4af5-84c0-0b2a82d645bd/');
+  await expect(page.locator('.exif-empty')).toHaveText(
+    'No EXIF information is available for this photograph.',
+  );
+  await expect(page.locator('.exif dt')).toHaveCount(0);
 });

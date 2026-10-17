@@ -1,41 +1,36 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PhotoGrid from '../components/PhotoGrid.astro';
-import { data, ordered } from '../lib/content';
+import { pageContent } from '../lib/content';
+const { data, ordered, t } = pageContent(Astro.url.pathname);
 const cities = [
   ...new Set(data.photos.map((p) => p.location.city).filter(Boolean)),
 ];
 ---
 
-<Layout
-  title="Gallery"
-  description="CastorRise 摄影作品集，浏览光影、城市与天气的片刻。"
->
+<Layout title={t.gallery} description={t.galleryDescription}>
   <section class="page-intro">
-    <p class="eyebrow">THE COMPLETE ARCHIVE</p>
+    <p class="eyebrow">{t.completeArchive}</p>
     <div class="intro-row">
       <h1>
-        Gallery<span>每一帧，都是世界的一片。</span>
+        {t.gallery}
+        <span>{t.fragment}</span>
       </h1>
       <p>
-        <span id="result-count">{data.photos.length}</span> PHOTOGRAPHS
+        <span id="result-count">{data.photos.length}</span> {t.photographs}
       </p>
     </div>
   </section>
   <section class="gallery-section">
     <form id="gallery-controls" class="gallery-controls" role="search">
       <label class="search-field">
-        <span class="sr-only">搜索作品</span>
-        <input
-          type="search"
-          id="gallery-search"
-          placeholder="Search photographs / 搜索作品"
-        />
+        <span class="sr-only">{t.search}</span>
+        <input type="search" id="gallery-search" placeholder={t.search} />
       </label>
       <label>
-        <span class="sr-only">分类</span>
+        <span class="sr-only">{t.category}</span>
         <select id="category-filter">
-          <option value="">All categories</option>
+          <option value="">{t.allCategories}</option>
           {data.categories
             .toSorted((a, b) => a.order - b.order)
             .map((c) => (
@@ -44,29 +39,29 @@ const cities = [
         </select>
       </label>
       <label>
-        <span class="sr-only">地点</span>
+        <span class="sr-only">{t.location}</span>
         <select id="city-filter">
-          <option value="">All locations</option>
+          <option value="">{t.allLocations}</option>
           {cities.map((city) => (
             <option>{city}</option>
           ))}
         </select>
       </label>
       <label>
-        <span class="sr-only">排序</span>
+        <span class="sr-only">{t.sort}</span>
         <select id="sort-filter">
-          <option value="order">Curated order</option>
-          <option value="taken">Date taken ↓</option>
-          <option value="published">Date published ↓</option>
+          <option value="order">{t.curated}</option>
+          <option value="taken">{t.takenSort}</option>
+          <option value="published">{t.publishedSort}</option>
         </select>
       </label>
     </form>
     <PhotoGrid photos={ordered} filterable />
     <p id="gallery-empty" class="quiet-empty" hidden>
-      没有找到匹配的作品。
+      {t.noResults}
     </p>
     <noscript>
-      <p>筛选需要 JavaScript；所有作品仍可浏览。</p>
+      <p>{t.filterJs}</p>
     </noscript>
   </section>
   <script>

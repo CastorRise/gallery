@@ -3,7 +3,15 @@ import '../styles/global.css';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import Lightbox from '../components/Lightbox.astro';
-import { data, url, imageUrl, largest } from '../lib/content';
+import { pageContent, imageUrl, largest } from '../lib/content';
+import {
+  locales,
+  languageNames,
+  languageTags,
+  pagePath,
+  localizedUrl,
+} from '../lib/i18n';
+const { data, url, locale, t } = pageContent(Astro.url.pathname);
 interface Props {
   title?: string;
   description?: string;
@@ -14,6 +22,7 @@ const pageTitle = title
   ? `${title} · ${data.settings.name}`
   : data.settings.name;
 const current = Astro.url.pathname;
+const route = pagePath(current);
 const canonical = new URL(current, Astro.site);
 const cover =
   data.photos.find((p) => p.id === data.settings.homeCoverId) ?? data.photos[0];
@@ -21,17 +30,17 @@ const og =
   image ??
   (cover ? new URL(imageUrl(largest(cover).file), Astro.site).href : undefined);
 const links = [
-  ['', 'Home'],
-  ['gallery/', 'Gallery'],
-  ['collections/', 'Collections'],
-  ['map/', 'Map'],
-  ['journal/', 'Journal'],
-  ['about/', 'About'],
+  ['', t.home],
+  ['gallery/', t.gallery],
+  ['collections/', t.collections],
+  ['map/', t.map],
+  ['journal/', t.journal],
+  ['about/', t.about],
 ];
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={languageTags[locale]} data-locale={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,43 +48,72 @@ const links = [
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {locales.map((language) => (
+      <link
+        rel="alternate"
+        hreflang={languageTags[language]}
+        href={new URL(localizedUrl(route, language), Astro.site)}
+      />
+    ))}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(localizedUrl(route, 'en'), Astro.site)}
+    />
     <meta property="og:site_name" content={data.settings.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     {og && <meta property="og:image" content={og} />}
-    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link
+      rel="icon"
+      href={localizedUrl('favicon.svg', 'en')}
+      type="image/svg+xml"
+    />
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('gallery-language');
+        const locale = document.documentElement.dataset.locale;
+        if (locale === 'en' && ['zh', 'zh-tw', 'ja'].includes(saved || '')) {
+          window.location.replace(
+            '/gallery/' +
+              saved +
+              '/' +
+              window.location.pathname.replace(/^\/gallery\/?/, '') +
+              window.location.search +
+              window.location.hash,
+          );
+        } else localStorage.setItem('gallery-language', locale);
+      } catch {}
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">
-      跳转到内容
+      {t.skip}
     </a>
     <header class="site-header">
       <a
         class="wordmark"
         href={url()}
-        aria-label={`${data.settings.name} 首页`}
+        aria-label={`${data.settings.name} ${t.home}`}
       >
         {data.settings.name}
         <span class="wordmark-dot" aria-hidden="true">
           .
         </span>
       </a>
-      <button
-        id="menu-toggle"
-        class="menu-toggle"
-        aria-expanded="false"
-        aria-controls="main-nav"
-      >
-        Menu <span>＋</span>
-      </button>
-      <nav id="main-nav" aria-label="主导航">
+      <nav id="main-nav" aria-label={t.mainNav}>
         {links.map(([path, label]) => (
           <a
             href={url(path)}
             aria-current={
-              (path === '' ? current === url() : current.startsWith(url(path)))
+              (
+                path === ''
+                  ? route === ''
+                  : route.startsWith(path) ||
+                    (path === 'gallery/' && route.startsWith('photos/'))
+              )
                 ? 'page'
                 : undefined
             }
@@ -84,6 +122,59 @@ const links = [
           </a>
         ))}
       </nav>
+      <div class="header-actions">
+        <div class="language-picker" data-language-picker>
+          <button
+            class="language-toggle"
+            data-language-toggle
+            aria-expanded="false"
+            aria-controls="language-options"
+            aria-label={`${t.language}: ${languageNames[locale]}`}
+          >
+            <span>{languageNames[locale]}</span>
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <path d="m3 6 5 5 5-5" />
+            </svg>
+          </button>
+          <ul
+            class="language-options"
+            id="language-options"
+            data-language-options
+            aria-label={t.language}
+            hidden
+            inert
+          >
+            {locales.map((language) => (
+              <li>
+                <a
+                  href={localizedUrl(route, language)}
+                  data-locale={language}
+                  lang={languageTags[language]}
+                  aria-current={language === locale ? 'true' : undefined}
+                >
+                  {languageNames[language]}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <button
+          id="menu-toggle"
+          class="menu-toggle"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label={t.menu}
+        >
+          <span class="menu-label">{t.menu}</span>
+          <span aria-hidden="true">☰</span>
+        </button>
+      </div>
     </header>
     <main id="main">
       <slot />
@@ -92,16 +183,16 @@ const links = [
       <a
         href={url()}
         class="wordmark"
-        aria-label={`${data.settings.name} 首页`}
+        aria-label={`${data.settings.name} ${t.home}`}
       >
         {data.settings.name}
         <span class="wordmark-dot" aria-hidden="true">
           .
         </span>
       </a>
-      <p>在流动的世界里，留下一瞬。</p>
+      <p>{t.manifesto}</p>
       <div>
-        <a href="https://castorrise.github.io/">Personal website ↗</a>
+        <a href="https://castorrise.github.io/">{t.website} ↗</a>
         <a href={data.settings.github}>GitHub ↗</a>
         <span>© {new Date().getFullYear()} CastorRise</span>
       </div>
@@ -109,10 +200,94 @@ const links = [
     <Lightbox />
     <script>
       const menu = document.querySelector<HTMLButtonElement>('#menu-toggle');
+      const nav = document.querySelector<HTMLElement>('#main-nav');
+      const picker = document.querySelector<HTMLElement>(
+        '[data-language-picker]',
+      );
+      const toggle = document.querySelector<HTMLButtonElement>(
+        '[data-language-toggle]',
+      )!;
+      const options = document.querySelector<HTMLElement>(
+        '[data-language-options]',
+      )!;
+      const links = Array.from(
+        options.querySelectorAll<HTMLAnchorElement>('a'),
+      );
+      function closeMenu() {
+        menu?.setAttribute('aria-expanded', 'false');
+        nav?.classList.remove('is-open');
+      }
+      function setLanguageOpen(open: boolean, focus = false) {
+        toggle.setAttribute('aria-expanded', String(open));
+        options.hidden = !open;
+        options.inert = !open;
+        if (focus) toggle.focus();
+      }
       menu?.addEventListener('click', () => {
         const open = menu.getAttribute('aria-expanded') !== 'true';
+        setLanguageOpen(false);
         menu.setAttribute('aria-expanded', String(open));
-        document.querySelector('#main-nav')?.classList.toggle('is-open', open);
+        nav?.classList.toggle('is-open', open);
+      });
+      toggle.addEventListener('click', () => {
+        closeMenu();
+        setLanguageOpen(toggle.getAttribute('aria-expanded') !== 'true');
+      });
+      toggle.addEventListener('keydown', (event) => {
+        if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+        event.preventDefault();
+        closeMenu();
+        setLanguageOpen(true);
+        links[event.key === 'ArrowDown' ? 0 : links.length - 1]?.focus();
+      });
+      options.addEventListener('keydown', (event) => {
+        const index = links.indexOf(
+          document.activeElement as HTMLAnchorElement,
+        );
+        const next =
+          event.key === 'ArrowDown'
+            ? (index + 1) % links.length
+            : event.key === 'ArrowUp'
+              ? (index - 1 + links.length) % links.length
+              : event.key === 'Home'
+                ? 0
+                : event.key === 'End'
+                  ? links.length - 1
+                  : -1;
+        if (next >= 0) {
+          event.preventDefault();
+          links[next]?.focus();
+        }
+      });
+      links.forEach((link) =>
+        link.addEventListener('click', (event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+            return;
+          event.preventDefault();
+          try {
+            localStorage.setItem('gallery-language', link.dataset.locale!);
+          } catch {}
+          window.location.assign(
+            link.href + window.location.search + window.location.hash,
+          );
+        }),
+      );
+      document.addEventListener('click', (event) => {
+        if (!picker?.contains(event.target as Node)) setLanguageOpen(false);
+      });
+      picker?.addEventListener('focusout', (event) => {
+        if (!picker.contains(event.relatedTarget as Node | null))
+          setLanguageOpen(false);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          if (toggle.getAttribute('aria-expanded') === 'true')
+            setLanguageOpen(false, true);
+          else {
+            closeMenu();
+            menu?.focus();
+          }
+        }
       });
     </script>
   </body>

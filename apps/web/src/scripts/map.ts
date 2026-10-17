@@ -1,3 +1,5 @@
+import { messages, localeFromPath } from '../lib/i18n';
+const t = messages[localeFromPath(window.location.pathname)];
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 type Point = {
@@ -43,7 +45,7 @@ function draw() {
     const content = document.createElement('div');
     content.className = 'map-popup';
     const title = document.createElement('h3');
-    title.textContent = `${p.city || '公开位置'} · ${points.length} 张`;
+    title.textContent = `${p.city || t.publicLocation} · ${points.length} ${t.photographs}`;
     content.append(title);
     for (const point of points) {
       const a = document.createElement('a');
@@ -70,7 +72,7 @@ function draw() {
       .addTo(layer);
   }
   document.querySelector('#map-count')!.textContent =
-    `${visible.length} 张公开地点作品`;
+    `${visible.length} ${t.locatedPhotos}`;
   if (visible.length)
     map.fitBounds(
       L.latLngBounds(

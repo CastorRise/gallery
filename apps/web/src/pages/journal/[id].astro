@@ -1,14 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PhotoImage from '../../components/PhotoImage.astro';
-import { data, url, photoUrl } from '../../lib/content';
+import { data as sourceData, pageContent } from '../../lib/content';
+const { data, url, photoUrl, t } = pageContent(Astro.url.pathname);
 export function getStaticPaths() {
-  return data.journals.map((journal) => ({
+  return sourceData.journals.map((journal) => ({
     params: { id: journal.id },
     props: { journal },
   }));
 }
-const { journal: j } = Astro.props;
+const j = data.journals.find((j) => j.id === Astro.props.journal.id)!;
 const cover = data.photos.find((p) => p.id === j.coverId);
 ---
 
@@ -16,7 +17,7 @@ const cover = data.photos.find((p) => p.id === j.coverId);
   <article class="journal-article">
     <header class="journal-heading">
       <a class="back-link" href={url('journal/')}>
-        ← Journal
+        ← {t.journal}
       </a>
       <p class="eyebrow">
         {j.date.slice(0, 10)} / {j.place}

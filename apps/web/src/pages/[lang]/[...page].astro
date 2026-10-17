@@ -1,0 +1,58 @@
+---
+import Home from '../index.astro';
+import Gallery from '../gallery.astro';
+import Collections from '../collections/index.astro';
+import Collection from '../collections/[id].astro';
+import Journal from '../journal/index.astro';
+import Story from '../journal/[id].astro';
+import Photo from '../photos/[id].astro';
+import MapPage from '../map.astro';
+import About from '../about.astro';
+import NotFound from '../404.astro';
+import { data } from '../../lib/content';
+import { locales } from '../../lib/i18n';
+export function getStaticPaths() {
+  const paths = [
+    '',
+    'gallery',
+    'collections',
+    'journal',
+    'map',
+    'about',
+    '404',
+    ...data.photos.map((p) => `photos/${p.id}`),
+    ...data.collections.map((c) => `collections/${c.id}`),
+    ...data.journals.map((j) => `journal/${j.id}`),
+  ];
+  return locales
+    .filter((l) => l !== 'en')
+    .flatMap((lang) =>
+      paths.map((page) => ({
+        params: { lang, page: page || undefined },
+        props: { page },
+      })),
+    );
+}
+const { page } = Astro.props;
+const [section, id] = page.split('/');
+const simple = {
+  '': Home,
+  gallery: Gallery,
+  collections: Collections,
+  journal: Journal,
+  map: MapPage,
+  about: About,
+  '404': NotFound,
+};
+const Page = simple[section as keyof typeof simple] ?? NotFound;
+---
+
+{section === 'photos' ? (
+  <Photo photo={data.photos.find((p) => p.id === id)!} />
+) : section === 'collections' && id ? (
+  <Collection collection={data.collections.find((c) => c.id === id)!} />
+) : section === 'journal' && id ? (
+  <Story journal={data.journals.find((j) => j.id === id)!} />
+) : (
+  <Page />
+)}

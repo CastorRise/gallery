@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { data, imageUrl, photoUrl } from '../lib/content';
+import { imageUrl, pageContent } from '../lib/content';
+const { data, photoUrl, t } = pageContent(Astro.url.pathname);
 const photos = data.photos
   .filter(
     (p) =>
@@ -18,28 +19,29 @@ const photos = data.photos
   }));
 ---
 
-<Layout title="Map" description="在地图上探索 CastorRise 的公开摄影地点。">
+<Layout title={t.map} description={t.mapDescription}>
   <section class="page-intro map-intro">
-    <p class="eyebrow">PLACES & PERSPECTIVES</p>
+    <p class="eyebrow">{t.places}</p>
     <h1>
-      A map of moments<span>沿着光影，走过世界。</span>
+      {t.mapTitle}
+      <span>{t.mapIntro}</span>
     </h1>
   </section>
   <section class="map-section">
     <div class="map-controls">
       <label>
-        城市
+        {t.city}
         <select id="map-city">
-          <option value="">全部城市</option>
+          <option value="">{t.allCities}</option>
           {[...new Set(photos.map((p) => p.city).filter(Boolean))].map((c) => (
             <option>{c}</option>
           ))}
         </select>
       </label>
       <label>
-        专题
+        {t.collections}
         <select id="map-collection">
-          <option value="">全部专题</option>
+          <option value="">{t.allCollections}</option>
           {data.collections.map((c) => (
             <option value={c.id}>{c.name}</option>
           ))}
@@ -47,13 +49,10 @@ const photos = data.photos
       </label>
       <span id="map-count" role="status"></span>
     </div>
-    <div id="photo-map" role="region" aria-label="公开摄影地点地图"></div>
-    <p class="map-note">
-      城市标记表示粗略城市中心，近似位置经取整；均不代表精确拍摄位置。地图底图由
-      OpenStreetMap 提供。
-    </p>
+    <div id="photo-map" role="region" aria-label={t.mapLabel}></div>
+    <p class="map-note">{t.mapNote}</p>
     <noscript>
-      <p>交互地图需要 JavaScript。</p>
+      <p>{t.mapJs}</p>
     </noscript>
   </section>
   <script

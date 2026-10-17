@@ -1,14 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PhotoImage from '../../components/PhotoImage.astro';
-import { data, url } from '../../lib/content';
+import { pageContent } from '../../lib/content';
+const { data, url, t } = pageContent(Astro.url.pathname);
 ---
 
-<Layout title="Collections">
+<Layout title={t.collections}>
   <section class="page-intro">
-    <p class="eyebrow">VISUAL CHAPTERS</p>
+    <p class="eyebrow">{t.chapters}</p>
     <h1>
-      Collections<span>把相遇的片刻，连成故事。</span>
+      {t.collections}
+      <span>{t.collectionIntro}</span>
     </h1>
   </section>
   <section class="section top-none">
@@ -25,14 +27,18 @@ import { data, url } from '../../lib/content';
                 <PhotoImage photo={p} sizes="(max-width:650px) 100vw, 50vw" />
               )}
               <div>
-                <span class="eyebrow">{c.photoIds.length} PHOTOGRAPHS</span>
-                <h2>{c.englishName || c.name}</h2>
+                <span class="eyebrow">
+                  {c.photoIds.length} {t.photographs}
+                </span>
+                <h2>{c.name}</h2>
                 <p>{c.name}</p>
               </div>
             </a>
           );
         })}
     </div>
-    {!data.collections.length && <p class="quiet-empty">专题正在整理中。</p>}
+    {!data.collections.length && (
+      <p class="quiet-empty">{t.collectionsEmpty}</p>
+    )}
   </section>
 </Layout>

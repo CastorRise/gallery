@@ -148,3 +148,11 @@ API/图片测试使用临时文件并清理；浏览器后台使用公开衍生�
 - **无法推送**：检查 `gh auth status`、origin、main 分支及远程更新。不要使用 force push。
 - **端口占用**：先关闭旧服务或指定 GALLERY_ADMIN_PORT；API 随端口同步校验 Origin。
 - **首次克隆没有私有图库**：可直接 `build:web` 查看公开内容；启动后台导入自己的照片，或恢复完整备份。不要将公开快照误认为完整私有备份。
+
+## Public languages and photograph details
+
+The public Gallery supports English at `/gallery/`, Simplified Chinese at `/gallery/zh/`, Traditional Chinese (Taiwan) at `/gallery/zh-tw/`, and Japanese at `/gallery/ja/`. The header language menu preserves the current photo, collection, or journal route and remembers the selected language independently of the personal website. The active navigation label has a full-width underline; photo details keep Gallery active.
+
+Photo-grid image links open their detail pages directly. On the detail page, the image opens the optional fullscreen viewer. EXIF appears below the photograph using only the already-public metadata; absent fields are omitted, and an empty state is shown when none exist.
+
+UI translations live in `apps/web/src/lib/i18n.ts`; AI-authored translations of existing public content live in `apps/web/src/lib/content-translations.ts`. Source text is preserved. Newly edited content falls back to its source until its translations are added; publication and the private local library are unchanged.

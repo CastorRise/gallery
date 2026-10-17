@@ -1,14 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PhotoImage from '../../components/PhotoImage.astro';
-import { data, url } from '../../lib/content';
+import { pageContent } from '../../lib/content';
+const { data, url, t } = pageContent(Astro.url.pathname);
 ---
 
-<Layout title="Journal">
+<Layout title={t.journal}>
   <section class="page-intro">
-    <p class="eyebrow">FIELD NOTES & STORIES</p>
+    <p class="eyebrow">{t.notesStories}</p>
     <h1>
-      Journal<span>照片之外，旅程之中。</span>
+      {t.journal}
+      <span>{t.journalIntro}</span>
     </h1>
   </section>
   <section class="section top-none">
@@ -29,8 +31,6 @@ import { data, url } from '../../lib/content';
           );
         })}
     </div>
-    {!data.journals.length && (
-      <p class="quiet-empty">摄影手记尚未发布。下一段旅程，会从这里开始。</p>
-    )}
+    {!data.journals.length && <p class="quiet-empty">{t.journalEmpty}</p>}
   </section>
 </Layout>

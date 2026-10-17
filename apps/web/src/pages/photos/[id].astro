@@ -1,24 +1,23 @@
 ---
+import { exifKeys } from '../../lib/i18n';
 import Layout from '../../layouts/Layout.astro';
 import PhotoImage from '../../components/PhotoImage.astro';
-import { data, url, categoryName, imageUrl, largest } from '../../lib/content';
+import {
+  imageUrl,
+  largest,
+  data as sourceData,
+  pageContent,
+} from '../../lib/content';
+const { data, url, categoryName, t } = pageContent(Astro.url.pathname);
 export function getStaticPaths() {
-  return data.photos.map((photo) => ({
+  return sourceData.photos.map((photo) => ({
     params: { id: photo.id },
     props: { photo },
   }));
 }
-const { photo: p } = Astro.props;
+const p = data.photos.find((p) => p.id === Astro.props.photo.id)!;
 const collections = data.collections.filter((c) => c.photoIds.includes(p.id));
-const labels: Record<string, string> = {
-  camera: 'Camera',
-  lens: 'Lens',
-  focalLength: 'Focal length',
-  aperture: 'Aperture',
-  shutterSpeed: 'Shutter speed',
-  iso: 'ISO',
-  dateTaken: 'Date taken',
-};
+const exif = Object.entries(p.exif).filter(([, value]) => value);
 ---
 
 <Layout
@@ -28,13 +27,13 @@ const labels: Record<string, string> = {
 >
   <section class="detail">
     <a href={url('gallery/')} class="back-link">
-      ← Gallery
+      ← {t.gallery}
     </a>
     <a
       class="detail-image"
       data-photo={p.id}
       href={imageUrl(largest(p).file)}
-      aria-label={`全屏浏览：${p.title}`}
+      aria-label={`${t.fullscreen}: ${p.title}`}
     >
       <PhotoImage photo={p} eager sizes="(max-width: 900px) 100vw, 90vw" />
     </a>
@@ -49,27 +48,32 @@ const labels: Record<string, string> = {
         </div>
         {collections.length > 0 && (
           <div class="detail-collections">
-            <p class="eyebrow">IN THESE COLLECTIONS</p>
+            <p class="eyebrow">{t.inCollections}</p>
             {collections.map((c) => (
-              <a href={url(`collections/${c.id}/`)}>
-                {c.englishName || c.name} ↗
-              </a>
+              <a href={url(`collections/${c.id}/`)}>{c.name} ↗</a>
             ))}
           </div>
         )}
       </div>
-      {Object.keys(p.exif).length > 0 && (
-        <dl class="exif">
-          {Object.entries(p.exif)
-            .filter(([, v]) => v)
-            .map(([key, value]) => (
-              <div>
-                <dt>{labels[key] ?? key}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-        </dl>
-      )}
+      <section class="exif-section" aria-labelledby="exif-heading">
+        <h2 id="exif-heading" class="eyebrow">
+          {t.exif}
+        </h2>
+        {exif.length > 0 ? (
+          <dl class="exif">
+            {exifKeys
+              .filter((key) => p.exif[key])
+              .map((key) => (
+                <div>
+                  <dt>{t[key]}</dt>
+                  <dd>{p.exif[key]}</dd>
+                </div>
+              ))}
+          </dl>
+        ) : (
+          <p class="exif-empty">{t.noExif}</p>
+        )}
+      </section>
     </div>
   </section>
 </Layout>

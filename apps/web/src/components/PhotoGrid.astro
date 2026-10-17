@@ -1,6 +1,7 @@
 ---
 import PhotoImage from './PhotoImage.astro';
-import { photoUrl, categoryName } from '../lib/content';
+import { pageContent } from '../lib/content';
+const { photoUrl, categoryName, t } = pageContent(Astro.url.pathname);
 import type { PublicPhoto } from '../../../../packages/shared/src/index';
 interface Props {
   photos: PublicPhoto[];
@@ -21,11 +22,7 @@ const { photos, filterable = false } = Astro.props;
       data-published={p.publishedAt ?? p.createdAt}
       data-order={p.order}
     >
-      <a
-        href={photoUrl(p.id)}
-        data-photo={p.id}
-        aria-label={`浏览：${p.title}`}
-      >
+      <a href={photoUrl(p.id)} aria-label={`${t.view}: ${p.title}`}>
         <PhotoImage photo={p} />
         <span class="image-open" aria-hidden="true">
           ↗

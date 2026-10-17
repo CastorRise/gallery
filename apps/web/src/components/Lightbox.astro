@@ -1,5 +1,6 @@
 ---
-import { data, photoUrl, imageUrl, largest } from '../lib/content';
+import { pageContent, imageUrl, largest } from '../lib/content';
+const { data, photoUrl, url, t } = pageContent(Astro.url.pathname);
 const payload = data.photos.map((p) => ({
   id: p.id,
   title: p.title,
@@ -10,40 +11,40 @@ const payload = data.photos.map((p) => ({
   url: photoUrl(p.id),
   collections: data.collections
     .filter((c) => c.photoIds.includes(p.id))
-    .map((c) => ({ name: c.name, url: `/gallery/collections/${c.id}/` })),
+    .map((c) => ({ name: c.name, url: url(`collections/${c.id}/`) })),
 }));
 ---
 
-<dialog id="lightbox" aria-label="全屏照片浏览器">
+<dialog id="lightbox" aria-label={t.viewer}>
   <div class="viewer-toolbar">
     <span id="viewer-count"></span>
     <div>
-      <button id="viewer-info" aria-label="查看照片信息" aria-pressed="false">
-        Info
+      <button id="viewer-info" aria-label={t.viewInfo} aria-pressed="false">
+        {t.info}
       </button>
-      <button id="viewer-zoom" aria-label="缩放照片" aria-pressed="false">
-        Zoom +
+      <button id="viewer-zoom" aria-label={t.zoomPhoto} aria-pressed="false">
+        {t.zoom} +
       </button>
-      <button id="viewer-close" aria-label="关闭照片浏览器">
-        Close ×
+      <button id="viewer-close" aria-label={t.closeViewer}>
+        {t.close} ×
       </button>
     </div>
   </div>
   <div class="viewer-stage">
     <p id="viewer-loading" role="status">
-      正在加载照片…
+      {t.loading}
     </p>
     <img id="viewer-image" alt="" />
-    <button id="viewer-prev" class="viewer-arrow prev" aria-label="上一张照片">
+    <button id="viewer-prev" class="viewer-arrow prev" aria-label={t.previous}>
       ←
     </button>
-    <button id="viewer-next" class="viewer-arrow next" aria-label="下一张照片">
+    <button id="viewer-next" class="viewer-arrow next" aria-label={t.next}>
       →
     </button>
   </div>
   <div class="viewer-footer">
     <h2 id="viewer-title"></h2>
-    <a id="viewer-detail">查看作品详情 ↗</a>
+    <a id="viewer-detail">{t.detail} ↗</a>
   </div>
   <aside id="viewer-panel" hidden></aside>
 </dialog>
